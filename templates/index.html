@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>聚商汇--物流AI智能AGV</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="content-language" content="zh-cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+        <meta name="baidu-site-verification" content="LQ7S6D6xBj" />
+        <meta name="description" content="聚商汇--物流AI智能AGV">
+        <meta name="keywords" content="聚商汇--物流AI智能AGV">
+        <meta name="author" content="聚商汇" >
+        <link rel="shortcut icon" href="/static/logo.png">
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?5efb624b19920b43bae25d88fedcf33a";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<div id="index">
+    <h5>机器人名称：{[ mac ]}</h5>
+    <input v-model="dataform.name" type="text" placeholder="请输入机器人名称"/>
+    <button @click="ChangeName()">确认</button>
+    <h1>{[ confirm ]}</h1>
+</div>
+        <script src="{% static 'vue/axios.min.js' %}"></script>
+        <script src="{% static 'vue/vue.js' %}"></script>
+<script>
+    var index= new Vue({
+        delimiters: ["{[", "]}"],
+        el: "#index",
+        data: {
+            dataform:{
+                name: '',
+                mac: '{{ mac|safe }}'
+            },
+            mac: '{{ mac|safe }}',
+            confirm: ''
+        },
+        methods: {
+            getName() {
+                axios({
+                    url: 'https://robotapi.56yhz.com/robotname/',
+                    method: 'post',
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    },
+                    params: {
+                    },
+                    data: {
+                        data: this.mac
+                    }
+                }).then(res => {
+                    if (res.data.code === '200') {
+                        this.dataform.name = res.data.data
+                    } else {
+                    }
+                }).catch( error => { console.log(error) })
+            },
+            ChangeName() {
+                if (this.dataform.name === '') {} else {
+                    this.PostChangeName()
+                }
+            },
+            PostChangeName() {
+                axios({
+                    url: 'https://robotapi.56yhz.com/robotchangename/',
+                    method: 'post',
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    },
+                    params: {
+                    },
+                    data: {
+                        data: this.dataform
+                    }
+                }).then(res => {
+                    if (res.data.code === '200') {
+                        console.log(res.data)
+                        this.confirm = '修改成功'
+                    } else {
+                        this.confirm = '修改失败'
+                    }
+                }).catch( error => { console.log(error) })
+            }
+        },
+        created(){
+        },
+        mounted(){
+            this.getName()
+        },
+        updated(){
+
+        },
+    })
+</script>
+</body>
+</html>
