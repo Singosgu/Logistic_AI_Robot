@@ -9,6 +9,8 @@ from django.shortcuts import render
 
 def index(request):
     context = {}
+    ip = request.get_host()
+    print(ip)
     context['mac'] = mac_address.get_mac_address()
     return render(request, 'index.html', context)
 
